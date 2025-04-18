@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
+
 import 'package:notes/repo/repository.dart';
 
 import '../../../model/note_model.dart';
@@ -8,16 +8,45 @@ part 'home_state.dart';
 
 class HomeCubit extends Cubit<HomeState> {
   Repository repository;
+
   HomeCubit(this.repository) : super(HomeInitial());
-  void loadNotes()async{
+
+  void loadNotes() async {
     emit(HomeLoading());
     List<NotesModel> notes = [];
-    try{
+    try {
       notes = await repository.getAllNotes();
       emit(HomeLoaded(notes));
-    }
-    catch(e){
+    } catch (e) {
       emit(HomeError());
     }
   }
+
+  void getNoteById(int id) async {
+    emit(HomeLoading());
+    NotesModel? note;
+    try {
+      note = await repository.getNoteById(id);
+      emit(HomeLoaded([note!]));
+    } catch (e) {
+      emit(HomeError());
+    }
+  }
+
+  void updateNote(NotesModel note) {
+    emit(HomeLoading());
+    try {
+      repository.updateNote(note);
+    } catch (e) {
+      emit(HomeError());
+    }
+  }
+  void deleteNote(int id) {
+    emit(HomeLoading());
+    try {
+      repository.deleteNote(id);
+    } catch (e) {
+      emit(HomeError());
+    }
+    }
 }

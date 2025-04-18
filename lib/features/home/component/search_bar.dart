@@ -1,37 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:notes/route/app_route.dart';
+
+import '../../../local_data_source/shared_preference.dart';
+import '../../../model/note_model.dart';
+import '../../../utils/color.dart';
 
 class CustomSearchDelegate extends SearchDelegate {
-  List<String> searchTerms = [
-    "Apple",
-    "Banana",
-    "Mango",
-    "Pear",
-    "Watermelons",
-    "Blueberries",
-    "Pineapples",
-    "Strawberries",
-  ];
+  final List<NotesModel> notes;
+  late final List<String> searchTerms;
+  late final List<NotesModel> searchList;
+
+  CustomSearchDelegate(this.notes) {
+    searchList = notes;
+  }
 
   @override
   ThemeData appBarTheme(BuildContext context) {
     return ThemeData(
-      scaffoldBackgroundColor: const Color(0xFF252525),
-      appBarTheme: const AppBarTheme(
-        backgroundColor: Color(0xFF252525),
-        iconTheme: IconThemeData(color: Colors.white),
+      scaffoldBackgroundColor: AppThemeHelper.background,
+      appBarTheme: AppBarTheme(
+        backgroundColor: AppThemeHelper.background,
+        iconTheme: IconThemeData(color: AppThemeHelper.foreground),
       ),
-      textTheme: const TextTheme(
-        titleLarge: TextStyle(color: Colors.white),
-        bodyLarge: TextStyle(color: Colors.white),
-        bodyMedium: TextStyle(color: Colors.white),
+      textTheme: TextTheme(
+        titleLarge: TextStyle(color: AppThemeHelper.foreground),
+        bodyLarge: TextStyle(color: AppThemeHelper.foreground),
+        bodyMedium: TextStyle(color: AppThemeHelper.foreground),
       ),
-      inputDecorationTheme: const InputDecorationTheme(
-        hintStyle: TextStyle(color: Colors.white54),
+      inputDecorationTheme: InputDecorationTheme(
+        hintStyle: TextStyle(color: AppThemeHelper.textFieldHint),
         border: InputBorder.none,
       ),
     );
   }
-
   @override
   List<Widget>? buildActions(BuildContext context) {
     return [
@@ -40,7 +41,7 @@ class CustomSearchDelegate extends SearchDelegate {
           query = '';
         },
         icon: const Icon(Icons.clear),
-        color: Colors.white,
+        color: AppThemeHelper.foreground,
       ),
     ];
   }
@@ -52,45 +53,117 @@ class CustomSearchDelegate extends SearchDelegate {
         close(context, null);
       },
       icon: const Icon(Icons.arrow_back),
-      color: Colors.white,
+      color: AppThemeHelper.foreground,
     );
   }
-
   @override
   Widget buildResults(BuildContext context) {
-    List<String> matchQuery = [];
-    for (var fruit in searchTerms) {
-      if (fruit.toLowerCase().contains(query.toLowerCase())) {
-        matchQuery.add(fruit);
-      }
-    }
+    List<NotesModel> matchQuery = searchList.where((note) {
+      return note.title.toLowerCase().contains(query.toLowerCase());
+    }).toList();
+
     return ListView.builder(
       itemCount: matchQuery.length,
       itemBuilder: (context, index) {
-        var result = matchQuery[index];
-        return ListTile(
-          title: Text(result, style: const TextStyle(color: Colors.white)),
+        final note = matchQuery[index];
+        return  Card(
+            color: AppThemeHelper.card,
+            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+            child:ListTile(
+          title: ListTile(
+            onTap: () {
+              SharedPref.setBool("isEditable", false);
+              SharedPref.setBool("isVisible", true);
+              SharedPref.setBool("isUpdated", true);
+              Navigator.pushReplacementNamed(
+                context,
+                AppRoute.details,
+                arguments: note,
+              );
+            },
+            title: Text(
+              note.title,
+              style: TextStyle(
+                color: AppThemeHelper.foreground,
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
+            ),
+            subtitle: Text(
+              note.content.length > 50
+                  ? '${note.content.substring(0, 50)}...'
+                  : note.content,
+              style: TextStyle(
+                color: AppThemeHelper.textFieldHint,
+                fontSize: 13,
+              ),
+            ),
+            trailing: Text(
+              note.date.substring(0, 10) ,
+              style: TextStyle(
+                color: AppThemeHelper.textFieldHint,
+                fontSize: 12,
+              ),
+            ),
+          ),
+        ));
+      },
+    );
+  }
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    List<NotesModel> matchQuery = searchList.where((note) {
+      return note.title.toLowerCase().contains(query.toLowerCase());
+    }).toList();
+
+    return ListView.builder(
+      itemCount: matchQuery.length,
+      itemBuilder: (context, index) {
+        final note = matchQuery[index];
+        return Card(
+          color: AppThemeHelper.card,
+          margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+          child: ListTile(
+            onTap: () {
+              SharedPref.setBool("isEditable", false);
+              SharedPref.setBool("isVisible", true);
+              SharedPref.setBool("isUpdated", true);
+              Navigator.pushReplacementNamed(
+                context,
+                AppRoute.details,
+                arguments: note,
+              );
+            },
+            title: Text(
+              note.title,
+              style: TextStyle(
+                color: AppThemeHelper.foreground,
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
+            ),
+            subtitle: Text(
+              note.content.length > 50
+                  ? '${note.content.substring(0, 50)}...'
+                  : note.content,
+              style: TextStyle(
+                color: AppThemeHelper.textFieldHint,
+                fontSize: 13,
+              ),
+            ),
+            trailing: Text(
+              note.date.substring(0, 10),
+              style: TextStyle(
+                color: AppThemeHelper.textFieldHint,
+                fontSize: 12,
+              ),
+            ),
+          ),
         );
       },
     );
   }
 
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    List<String> matchQuery = [];
-    for (var fruit in searchTerms) {
-      if (fruit.toLowerCase().contains(query.toLowerCase())) {
-        matchQuery.add(fruit);
-      }
-    }
-    return ListView.builder(
-      itemCount: matchQuery.length,
-      itemBuilder: (context, index) {
-        var result = matchQuery[index];
-        return ListTile(
-          title: Text(result, style: const TextStyle(color: Colors.white)),
-        );
-      },
-    );
-  }
 }
+
+

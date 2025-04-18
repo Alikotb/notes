@@ -4,13 +4,13 @@ class NotesModel{
   final String title;
   final String content;
   final String date;
-  final bool isImportant;
-  const NotesModel({
+  bool isImportant;
+  NotesModel({
     required this.id,
     required this.title,
     required this.content,
     required this.date,
-    required this.isImportant,
+     this.isImportant=false,
 });
 
   Map<String, dynamic> toMap() {

@@ -51,22 +51,23 @@ class DatabaseHelper {
     return await db.update(
       'notes',
       note.toMap(),
-      where: 'title = ?',
-      whereArgs: [note.title],
+      where: 'id = ?',
+      whereArgs: [note.id],
     );
   }
 
-  Future<int> deleteNote(String title) async {
+
+  Future<int> deleteNote(int id) async {
     final db = await database;
-    return await db.delete('notes', where: 'title = ?', whereArgs: [title]);
+    return await db.delete('notes', where: 'id = ?', whereArgs: [id]);
   }
 
-  Future<NotesModel?> getNoteByTitle(String title) async {
+  Future<NotesModel?> getNoteById(int id) async {
     final db = await database;
     List<Map<String, dynamic>> maps = await db.query(
       'notes',
-      where: 'title = ?',
-      whereArgs: [title],
+      where: 'id = ?',
+      whereArgs: [id],
     );
     if (maps.isNotEmpty) {
       return NotesModel.fromMap(maps.first);
@@ -77,6 +78,17 @@ class DatabaseHelper {
   Future<List<NotesModel>> getAllNotes() async {
     final db = await database;
     List<Map<String, dynamic>> maps = await db.query('notes');
+    return List.generate(maps.length, (i) {
+      return NotesModel.fromMap(maps[i]);
+    });
+  }
+  Future<List<NotesModel>> getImportantNotes() async {
+    final db = await database;
+    List<Map<String, dynamic>> maps = await db.query(
+      'notes',
+      where: 'isImportant = ?',
+      whereArgs: [1],
+        );
     return List.generate(maps.length, (i) {
       return NotesModel.fromMap(maps[i]);
     });
