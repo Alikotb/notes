@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:notes/features/important/viewmodel/important_cubit.dart';
 
 import '../features/details/details.dart';
 import '../features/details/viewmodel/details_cubit.dart';
 import '../features/home/home_screen.dart';
 import '../features/home/viewmodel/home_cubit.dart';
 import '../features/important/important.dart';
+import '../features/important/viewmodel/important_cubit.dart';
 import '../features/splash/splash_screen.dart';
 import '../model/note_model.dart';
 import '../repo/repository.dart';

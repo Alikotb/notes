@@ -1,13 +1,13 @@
+import 'package:Noto/features/home/viewmodel/home_cubit.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:notes/features/home/viewmodel/home_cubit.dart';
-import 'package:notes/local_data_source/shared_preference.dart';
-import 'package:notes/route/app_route.dart';
-
+import '../../components/custome_fab.dart';
+import '../../local_data_source/shared_preference.dart';
 import '../../model/note_model.dart';
 import '../../repo/repository.dart';
+import '../../route/app_route.dart';
 import '../../utils/color.dart';
 import 'component/more_options_menu.dart';
 import '../../components/note_item.dart';
@@ -105,6 +105,40 @@ class _HomeScreenState extends State<HomeScreen> {
                     }
                     return DateTime.parse(b.date).compareTo(DateTime.parse(a.date));
                   });
+                  if(arrangedNote.isEmpty){
+                    return SliverToBoxAdapter(
+                      child: Container(
+                        width: MediaQuery.of(context).size.width * 0.7,
+                        height: MediaQuery.of(context).size.height ,
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              Image.asset('assets/images/naroto.png', fit: BoxFit.cover),
+                              SizedBox(height: 10),
+                              Padding(
+                                padding: const EdgeInsets.only(right: 12.0,left: 12),
+                                child: Container(
+
+                                  child: Text(
+                                    'empty',
+                                    style: TextStyle(
+                                      color: AppThemeHelper.icon,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 3,
+                                  ).tr(),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+
+                    );
+                  }
+                  else{
                   return SliverGrid(
                     delegate: SliverChildBuilderDelegate((context, index) {
                       return GestureDetector(
@@ -138,7 +172,7 @@ class _HomeScreenState extends State<HomeScreen> {
       
                     ),
                   );
-                }else{
+                }}else{
                   return  SliverToBoxAdapter(
                     child: Center(
                       child: CircularProgressIndicator(),
@@ -158,21 +192,12 @@ class _HomeScreenState extends State<HomeScreen> {
           padding: EdgeInsets.only(
             bottom: MediaQuery.of(context).size.height * 0.03,
           ),
-          child: FloatingActionButton(
-            heroTag: 'fab-home',
-            onPressed: () {
-              SharedPref.setBool("isEditable", true);
-              SharedPref.setBool("isVisible", false);
-              SharedPref.setBool("isUpdated", false);
-              Navigator.pushNamed(context, AppRoute.details);
-            },
-            backgroundColor: AppThemeHelper.fabBackground,
-            foregroundColor: AppThemeHelper.fabForeground,
-            elevation: 10,
-            shape: const CircleBorder(),
-            splashColor: Colors.grey,
-            child: const Icon(Icons.add, size: 35, weight: 900),
-          ),
+          child: CustomFab(icon: Icons.add, onTap: () {
+            SharedPref.setBool("isEditable", true);
+            SharedPref.setBool("isVisible", false);
+            SharedPref.setBool("isUpdated", false);
+            Navigator.pushNamed(context, AppRoute.details);
+          },),
         ),
       ),
     );

@@ -1,7 +1,7 @@
+import 'package:Noto/route/app_route.dart';
+import 'package:Noto/route/route_generator.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:notes/route/app_route.dart';
-import 'package:notes/route/route_generator.dart';
 
 import 'local_data_source/shared_preference.dart';
 
@@ -30,6 +30,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return MaterialApp(
+
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,
       locale: context.locale,

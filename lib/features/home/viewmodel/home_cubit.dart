@@ -1,8 +1,6 @@
 import 'package:bloc/bloc.dart';
-
-import 'package:notes/repo/repository.dart';
-
 import '../../../model/note_model.dart';
+import '../../../repo/repository.dart';
 
 part 'home_state.dart';
 

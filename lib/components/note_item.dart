@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:notes/model/note_model.dart';
+import '../model/note_model.dart';
 import '../utils/color.dart';
 
 class NoteItem extends StatefulWidget {
@@ -45,7 +45,6 @@ class _NoteItemState extends State<NoteItem> {
 
   @override
   void didUpdateWidget(covariant NoteItem oldWidget) {
-    // TODO: implement didUpdateWidget
     super.didUpdateWidget(oldWidget);
     starColor = widget.note!.isImportant ? Colors.red : AppThemeHelper.icon;
     if (widget.isHome) {

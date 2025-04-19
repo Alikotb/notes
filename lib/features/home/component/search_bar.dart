@@ -1,11 +1,12 @@
+import 'package:Noto/features/home/component/search_card.dart';
 import 'package:flutter/material.dart';
-import 'package:notes/features/home/component/custom_ink_button.dart';
-import 'package:notes/features/home/component/search_card.dart';
-import 'package:notes/route/app_route.dart';
+
 
 import '../../../local_data_source/shared_preference.dart';
 import '../../../model/note_model.dart';
+import '../../../route/app_route.dart';
 import '../../../utils/color.dart';
+import 'custom_ink_button.dart';
 
 class CustomSearchDelegate extends SearchDelegate {
   final List<NotesModel> notes;

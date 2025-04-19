@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:notes/model/note_model.dart';
 
+import '../../../model/note_model.dart';
 import '../../../utils/color.dart';
 
 class SearchCard extends StatelessWidget {

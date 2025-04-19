@@ -1,7 +1,7 @@
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:notes/model/note_model.dart';
-import 'package:notes/repo/repository.dart';
+import '../../../model/note_model.dart';
+import '../../../repo/repository.dart';
 
 part 'important_state.dart';
 

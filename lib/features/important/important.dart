@@ -1,7 +1,8 @@
+import 'package:Noto/features/important/viewmodel/important_cubit.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:notes/features/important/viewmodel/important_cubit.dart';
+import 'package:gap/gap.dart';
 
 import '../../local_data_source/shared_preference.dart';
 import '../../model/note_model.dart';
@@ -43,35 +44,43 @@ class _ImportantScreenState extends State<ImportantScreen> {
       body: SafeArea(
         child: CustomScrollView(
           slivers: [
-            SliverAppBar(
-              snap: false,
-              pinned: false,
-              floating: false,
-              backgroundColor: AppThemeHelper.background,
-              title: Padding(
-                padding: EdgeInsets.only(left: 8.0),
-                child: Text(
-                  'important_notes',
-                  style: TextStyle(
-                    color: AppThemeHelper.foreground,
-                    fontSize: 25,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ).tr(),
-              ),
-              leading: Padding(
-                padding: const EdgeInsets.only(left: 12.0),
-                child: CustomAppButton(
-                  icon: CustomInkButton(
-                    onTap: () {
-                      Navigator.pushReplacementNamed(context, AppRoute.home);
-                    },
-                    icon: Icons.arrow_back_ios_new_outlined,
-                  ),
-                ),
-              ),
+             SliverToBoxAdapter(child: SizedBox(height: 16)),
+
+            SliverToBoxAdapter(
+                child: Column(
+
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 12.0,right: 12.0),
+                          child: CustomAppButton(
+                            icon: CustomInkButton(
+                              onTap: () {
+                                Navigator.pop(context);
+                              },
+                              icon: Icons.arrow_back,
+                            ),
+                          ),
+                        ),
+                        Gap(16),
+                        Text(
+                          'important_notes',
+                          style: TextStyle(
+                            color: AppThemeHelper.foreground,
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ).tr(),
+
+                      ],
+                    ),
+
+                    Gap(16),
+                  ],
+                )
             ),
-            SliverToBoxAdapter(child: SizedBox(height: 16)),
             BlocBuilder<ImportantCubit, ImportantState>(
               builder: (context, state) {
                 if (state is ImportantInitial) {
@@ -80,7 +89,39 @@ class _ImportantScreenState extends State<ImportantScreen> {
                   );
                 } else if (state is ImportantLoaded) {
                   List<NotesModel> arrangedNotes = state.notes;
-                  return SliverList(
+                  if (arrangedNotes.isEmpty) {
+                    return SliverToBoxAdapter(
+                        child: Container(
+                          width: MediaQuery.of(context).size.width * 0.7,
+                          height: MediaQuery.of(context).size.height ,
+                          child: SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                Image.asset('assets/images/saski.png', fit: BoxFit.cover),
+                                SizedBox(height: 10),
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 12.0,left: 12),
+                                  child: Container(
+
+                                    child: Text(
+                                      'empty_imp',
+                                      style: TextStyle(
+                                        color: AppThemeHelper.icon,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 3,
+                                    ).tr(),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                    );
+                  }
+                  else{return SliverList(
                     delegate: SliverChildBuilderDelegate((context, index) {
                       arrangedNotes.sort(
                         (a, b) => DateTime.parse(
@@ -88,6 +129,7 @@ class _ImportantScreenState extends State<ImportantScreen> {
                         ).compareTo(DateTime.parse(a.date)),
                       );
                       var note = arrangedNotes[index];
+
                       return Padding(
                         padding: const EdgeInsets.only(
                           right: 8.0,
@@ -134,7 +176,7 @@ class _ImportantScreenState extends State<ImportantScreen> {
                         ),
                       );
                     }, childCount: arrangedNotes.length),
-                  );
+                  );};
                 } else if (state is ImportantError) {
                   return SliverToBoxAdapter(
                     child: Center(child: Text('An error occurred: ')),
