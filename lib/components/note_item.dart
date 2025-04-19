@@ -3,14 +3,16 @@ import 'package:notes/model/note_model.dart';
 import '../utils/color.dart';
 
 class NoteItem extends StatefulWidget {
-   const NoteItem({
+  const NoteItem({
     super.key,
     this.note,
     required this.onDelete,
     required this.onUpdate,
-    this.isImportant=false,
+    this.isImportant = false,
+    required this.isHome,
   });
 
+  final bool isHome;
   final bool isImportant;
   final NotesModel? note;
   final VoidCallback onDelete;
@@ -22,11 +24,40 @@ class NoteItem extends StatefulWidget {
 
 class _NoteItemState extends State<NoteItem> {
   late Color starColor;
+  late Color cardColor;
 
   @override
   void initState() {
     super.initState();
+
     starColor = widget.note!.isImportant ? Colors.red : AppThemeHelper.icon;
+    if (widget.isHome) {
+      if (widget.isImportant) {
+        cardColor = AppThemeHelper.importantCard;
+      } else {
+        cardColor = AppThemeHelper.card;
+      }
+    } else {
+      cardColor =
+          (ColorGenerator.generateHarmoniousColors(count: 5)..shuffle()).first;
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant NoteItem oldWidget) {
+    // TODO: implement didUpdateWidget
+    super.didUpdateWidget(oldWidget);
+    starColor = widget.note!.isImportant ? Colors.red : AppThemeHelper.icon;
+    if (widget.isHome) {
+      if (widget.isImportant) {
+        cardColor = AppThemeHelper.importantCard;
+      } else {
+        cardColor = AppThemeHelper.card;
+      }
+    } else {
+      cardColor =
+          (ColorGenerator.generateHarmoniousColors(count: 5)..shuffle()).first;
+    }
   }
 
   @override
@@ -39,8 +70,7 @@ class _NoteItemState extends State<NoteItem> {
       margin: const EdgeInsets.all(8),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
       decoration: BoxDecoration(
-        color: widget.isImportant==false?AppThemeHelper.card
-            : (ColorGenerator.generateHarmoniousColors(count: 5)..shuffle()).first,
+        color: cardColor,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
@@ -127,13 +157,12 @@ class _NoteItemState extends State<NoteItem> {
             ],
           ),
 
-          const SizedBox(height: 12),
+          const SizedBox(height: 6),
 
           Text(
             widget.note!.content,
             style: TextStyle(color: AppThemeHelper.textFieldText, fontSize: 14),
-            maxLines: 4,
-            overflow: TextOverflow.ellipsis,
+            maxLines: 5,
           ),
         ],
       ),

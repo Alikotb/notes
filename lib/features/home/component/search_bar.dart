@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:notes/features/home/component/custom_ink_button.dart';
+import 'package:notes/features/home/component/search_card.dart';
 import 'package:notes/route/app_route.dart';
 
 import '../../../local_data_source/shared_preference.dart';
@@ -12,6 +14,13 @@ class CustomSearchDelegate extends SearchDelegate {
 
   CustomSearchDelegate(this.notes) {
     searchList = notes;
+  }
+
+  void onTap(BuildContext context, NotesModel note) {
+    SharedPref.setBool("isEditable", false);
+    SharedPref.setBool("isVisible", true);
+    SharedPref.setBool("isUpdated", true);
+    Navigator.pushReplacementNamed(context, AppRoute.details, arguments: note);
   }
 
   @override
@@ -33,88 +42,29 @@ class CustomSearchDelegate extends SearchDelegate {
       ),
     );
   }
+
   @override
   List<Widget>? buildActions(BuildContext context) {
     return [
-      IconButton(
-        onPressed: () {
-          query = '';
-        },
-        icon: const Icon(Icons.clear),
-        color: AppThemeHelper.foreground,
-      ),
+      Padding(
+        padding: const EdgeInsets.only(right: 16.0),
+        child: CustomInkButton(onTap: (){query = '';}, icon: Icons.clear),
+      )
     ];
   }
 
   @override
   Widget? buildLeading(BuildContext context) {
-    return IconButton(
-      onPressed: () {
-        close(context, null);
-      },
-      icon: const Icon(Icons.arrow_back),
-      color: AppThemeHelper.foreground,
-    );
+    return CustomInkButton(onTap: (){ close(context, null);}, icon: Icons.arrow_back);
+
   }
+
   @override
   Widget buildResults(BuildContext context) {
-    List<NotesModel> matchQuery = searchList.where((note) {
-      return note.title.toLowerCase().contains(query.toLowerCase());
-    }).toList();
-
-    return ListView.builder(
-      itemCount: matchQuery.length,
-      itemBuilder: (context, index) {
-        final note = matchQuery[index];
-        return  Card(
-            color: AppThemeHelper.card,
-            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-            child:ListTile(
-          title: ListTile(
-            onTap: () {
-              SharedPref.setBool("isEditable", false);
-              SharedPref.setBool("isVisible", true);
-              SharedPref.setBool("isUpdated", true);
-              Navigator.pushReplacementNamed(
-                context,
-                AppRoute.details,
-                arguments: note,
-              );
-            },
-            title: Text(
-              note.title,
-              style: TextStyle(
-                color: AppThemeHelper.foreground,
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-              ),
-            ),
-            subtitle: Text(
-              note.content.length > 50
-                  ? '${note.content.substring(0, 50)}...'
-                  : note.content,
-              style: TextStyle(
-                color: AppThemeHelper.textFieldHint,
-                fontSize: 13,
-              ),
-            ),
-            trailing: Text(
-              note.date.substring(0, 10) ,
-              style: TextStyle(
-                color: AppThemeHelper.textFieldHint,
-                fontSize: 12,
-              ),
-            ),
-          ),
-        ));
-      },
-    );
-  }
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    List<NotesModel> matchQuery = searchList.where((note) {
-      return note.title.toLowerCase().contains(query.toLowerCase());
-    }).toList();
+    List<NotesModel> matchQuery =
+        searchList.where((note) {
+          return note.title.toLowerCase().contains(query.toLowerCase());
+        }).toList();
 
     return ListView.builder(
       itemCount: matchQuery.length,
@@ -123,47 +73,37 @@ class CustomSearchDelegate extends SearchDelegate {
         return Card(
           color: AppThemeHelper.card,
           margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-          child: ListTile(
-            onTap: () {
-              SharedPref.setBool("isEditable", false);
-              SharedPref.setBool("isVisible", true);
-              SharedPref.setBool("isUpdated", true);
-              Navigator.pushReplacementNamed(
-                context,
-                AppRoute.details,
-                arguments: note,
-              );
-            },
-            title: Text(
-              note.title,
-              style: TextStyle(
-                color: AppThemeHelper.foreground,
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-              ),
-            ),
-            subtitle: Text(
-              note.content.length > 50
-                  ? '${note.content.substring(0, 50)}...'
-                  : note.content,
-              style: TextStyle(
-                color: AppThemeHelper.textFieldHint,
-                fontSize: 13,
-              ),
-            ),
-            trailing: Text(
-              note.date.substring(0, 10),
-              style: TextStyle(
-                color: AppThemeHelper.textFieldHint,
-                fontSize: 12,
-              ),
-            ),
+          child: SearchCard(
+            note: note,
+            onTap: (context, note) => onTap(context, note),
           ),
         );
       },
     );
   }
 
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    List<NotesModel> matchQuery =
+        searchList.where((note) {
+          return note.title.toLowerCase().contains(query.toLowerCase());
+        }).toList();
+
+    return ListView.builder(
+      itemCount: matchQuery.length,
+      itemBuilder: (context, index) {
+        final note = matchQuery[index];
+        return Card(
+          color: AppThemeHelper.card,
+          margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+          child: SearchCard(
+            note: note,
+            onTap: (BuildContext context, NotesModel note) {
+              onTap(context, note);
+            },
+          ),
+        );
+      },
+    );
+  }
 }
-
-

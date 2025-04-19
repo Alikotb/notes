@@ -31,6 +31,8 @@ class AppThemeHelper {
 
   static Color get card =>
       isDarkMode ? const Color(0xFF3B3B3B) : const Color(0xFFF1F1F1);
+  static Color get importantCard =>
+      isDarkMode ? const Color(0xFF3949AB) : const Color(0xFFAED6F1);
 }
 
 

@@ -60,7 +60,7 @@ class _MoreOptionsMenuState extends State<MoreOptionsMenu> {
 
                       });
                       widget.onThemeToggle(newValue);
-                      Navigator.pop(context);
+                      Navigator.pushReplacementNamed(context,AppRoute.home);
                     },
                     activeColor: Colors.white,
                     inactiveThumbColor: Colors.white60,
