@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:notes/features/important/viewmodel/important_cubit.dart';
@@ -50,13 +51,13 @@ class _ImportantScreenState extends State<ImportantScreen> {
               title: Padding(
                 padding: EdgeInsets.only(left: 8.0),
                 child: Text(
-                  "Important",
+                  'important_notes',
                   style: TextStyle(
                     color: AppThemeHelper.foreground,
                     fontSize: 25,
                     fontWeight: FontWeight.bold,
                   ),
-                ),
+                ).tr(),
               ),
               leading: Padding(
                 padding: const EdgeInsets.only(left: 12.0),

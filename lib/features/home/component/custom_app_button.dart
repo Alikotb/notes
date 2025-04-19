@@ -5,14 +5,15 @@ import '../../../utils/color.dart';
 import 'custom_ink_button.dart';
 
 class CustomAppButton extends StatelessWidget {
-  const CustomAppButton({super.key, required this.icon});
+  const CustomAppButton({super.key, required this.icon,this.height=40});
   final CustomInkButton icon;
+  final double height;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: 40,
-      height: 40,
+      height: height,
       decoration: BoxDecoration(
         color: AppThemeHelper.card,
         borderRadius: BorderRadius.circular(10),

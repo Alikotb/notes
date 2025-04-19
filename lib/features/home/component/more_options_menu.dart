@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '../../../route/app_route.dart';
@@ -40,7 +41,7 @@ class _MoreOptionsMenuState extends State<MoreOptionsMenu> {
       itemBuilder: (context) => [
          PopupMenuItem<int>(
           value: 0,
-          child: Text("Important", style: TextStyle(color: AppThemeHelper.foreground)),
+          child: Text('important', style: TextStyle(color: AppThemeHelper.foreground)).tr(),
         ),
         PopupMenuItem<int>(
           value: 1,
@@ -51,7 +52,7 @@ class _MoreOptionsMenuState extends State<MoreOptionsMenu> {
               return Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                   Text("Dark Mode", style: TextStyle(color: AppThemeHelper.foreground)),
+                   Text('dark_mode', style: TextStyle(color: AppThemeHelper.foreground)).tr(),
                   Switch(
                     value: localDarkMode,
                     onChanged: (bool newValue) {
