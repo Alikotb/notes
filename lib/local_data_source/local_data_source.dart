@@ -23,7 +23,6 @@ class DatabaseHelper {
       path,
       version: 2,
       onCreate: (db, version) async {
-        // Create user table
         await db.execute('''
         CREATE TABLE notes (
         id INTEGER PRIMARY KEY,

@@ -2,11 +2,9 @@
 class Assets {
   Assets._();
 
-  static const String assetsImagesNoto = 'assets/images/noto.svg';
   static const String iconIcon = 'assets/icon/icon.png';
   static const String imagesEm = 'assets/images/em.png';
   static const String imagesLogo = 'assets/images/logo.png';
-  static const String imagesLogo1 = 'assets/images/logo1.png';
   static const String imagesNaroto = 'assets/images/naroto.png';
   static const String imagesNoto = 'assets/images/noto.png';
   static const String imagesSaski = 'assets/images/saski.png';

@@ -58,7 +58,7 @@ class _ImportantScreenState extends State<ImportantScreen> {
                           child: CustomAppButton(
                             icon: CustomInkButton(
                               onTap: () {
-                                Navigator.pop(context);
+                                Navigator.pushReplacementNamed(context,AppRoute.home);
                               },
                               icon: Icons.arrow_back,
                             ),
